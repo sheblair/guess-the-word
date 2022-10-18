@@ -25,39 +25,64 @@ const playAgainButton = document.querySelector(".play-again");
 // the word the player must guess
 const word = "magnolia";
 
-// function to update word to placeholder circles - i used solution code for this
+// the empty array to contain all the letters the player has guessed
+const guessedLetters = [];
+
+
 const placeholder = function (word) {
     
-    // empty array where the placeholder circles will go
     const placeholderLetters = [];
 
-    // loop over the word, and for each letter of the word,
-    // 1. log it to the console and
-    // 2. push a ● to the empty array
     for (let letter of word) {
         console.log(letter);
         placeholderLetters.push("●");
     }
-    
-    // array with circles is joined into a string and becomes the text inside the wordInProgress element
+
     wordInProgress.innerText = placeholderLetters.join("");
 };
 
-// calling the placeholder function. this can work w/o param/arg while word=magnolia, but when it becomes any random word, we will need the param/arg pair
 placeholder(word);
 
-// event listener for click event on "Guess!" button
+
 guessLetterButton.addEventListener("click", function (e) {
-    // this prevents the form from doing default behavior of clicking, form submitting, and page reloading
     e.preventDefault();
 
-    // create a variable to capture the guess input
-    const guess = letterInput.value;
+    // empty message paragraph
+    message.innerText = "";
+    // grab what was entered in the input
+    const guess = letterInput.value;    
+    // making sure it is a single letter
+    const goodGuess = validateInput(guess);
 
-    // log out the input of the guessed letter
-    console.log(guess);
-
-    // empty the input box for the next guess
-    letterInput.value = ""; 
-
+    if (goodGuess) {
+        // we've got a letter - let's guess
+        makeGuess(guess);
+    }
+    // empty letter input for next guess
+    letterInput.value = "";   
 });
+
+const validateInput = function (input) {
+    const acceptedLetter = /[a-zA-Z]/;
+
+    if (input === "") {
+        message.innerText = "Please enter a letter from A-Z.";
+    } else if (input.length > 1) {
+        message.innerText = "Please only guess one letter at a time.";
+    } else if (!input.match(acceptedLetter)) {
+        message.innerText = "Letters only, please!";
+    } else {
+        return input;
+    }
+};
+
+const makeGuess = function (guess) {
+    guess = guess.toUpperCase();
+
+    if (guessedLetters.includes(guess)) {
+        message.innerText = "You've already guessed that one. Try a new letter!";
+    } else {
+        guessedLetters.push(guess);
+        console.log(guessedLetters);
+    }
+};
