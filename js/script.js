@@ -54,12 +54,16 @@ guessLetterButton.addEventListener("click", function (e) {
     // making sure it is a single letter
     const goodGuess = validateInput(guess);
 
-    if (goodGuess) {
-        // we've got a letter - let's guess
-        makeGuess(guess);
-    }
+    // make the guess with the variable that contains the validated input
+     makeGuess(goodGuess);
+
     // empty letter input for next guess
-    letterInput.value = "";   
+    letterInput.value = "";  
+
+    // this conditional block is the solution code - this doesn't make sense to me
+    // if (goodGuess) {
+    //     makeGuess(guess);
+    // }
 });
 
 const validateInput = function (input) {
@@ -84,5 +88,46 @@ const makeGuess = function (guess) {
     } else {
         guessedLetters.push(guess);
         console.log(guessedLetters);
+        showGuessedLetters();
+        updateWordInProgress(guessedLetters);
+    }
+};
+
+const showGuessedLetters = function () {
+    guessedLettersElement.innerHTML = "";
+
+    guessedLetters.forEach(function (letter) {
+        let li = document.createElement("li");
+        li.innerText = letter;
+        guessedLettersElement.append(li)
+    });
+};
+
+const updateWordInProgress = function (guessedLetters) {
+
+    const wordUpper = word.toUpperCase();
+    const wordArray = wordUpper.split("");
+    const revealWord = [];
+
+    // i got everything pretty much on my own except for the else statement, and also i had reversed
+    // the loop so was let letter of guessedLetters rather than let letter of wordArray. which DOES matter
+    // bc i just tried reversing it and it fucks it up. honestly this bit was hard for me, i struggled a lot
+    // with it and am still kinda not sure if i totally understand it
+    for (let letter of wordArray) {
+        if (guessedLetters.includes(letter)) {
+            revealWord.push(letter.toUpperCase());
+        } else {
+            revealWord.push("●");
+        }
+    };
+
+    wordInProgress.innerText = revealWord.join("");
+    checkIfWin();
+};
+
+const checkIfWin = function () {
+    if (wordInProgress.innerText === word.toUpperCase()) {
+        message.classList.add("win");
+        message.innerHTML = `<p class="highlight">You guessed correct the word! Congrats!</p>`;
     }
 };
