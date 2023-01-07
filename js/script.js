@@ -29,7 +29,6 @@ getWord();
 const placeholder = function (word) {
     const placeholderLetters = [];
     for (let letter of word) {
-        console.log(letter);
         placeholderLetters.push("●");
     }
     wordInProgress.innerText = placeholderLetters.join("");
@@ -71,7 +70,6 @@ const makeGuess = function (guess) {
         message.innerText = "You've already guessed that one. Try a new letter!";
     } else {
         guessedLetters.push(guess);
-        console.log(guessedLetters);
         showGuessedLetters();
         updateGuessesRemaining(guess);
         updateWordInProgress(guessedLetters);
